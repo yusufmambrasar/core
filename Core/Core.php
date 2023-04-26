@@ -73,11 +73,26 @@ class Core
                             $this->Response->Code = 200;
                             $this->Response->Module = ucfirst($queries[0]);
                             $this->Response->Class = ucfirst($queries[0]);
+                            $this->Response->Function = 'index';
                             $this->Response->File = $file;
                         }
                         else
                         {   
-                            $this->Response->Code = 404;
+                            $file = BASE.'/App/Modules/'.ucfirst($queries[0]).
+                            '/Controllers/Home.php';  
+                            if(file_exists($file))
+                            {
+                                $location = 2;
+                                $this->Response->Code = 200;
+                                $this->Response->Module = ucfirst($queries[0]);
+                                $this->Response->Class = 'Home';
+                                $this->Response->Function = 'index';
+                                $this->Response->File = $file;
+                            }          
+                            else
+                            {          
+                                $this->Response->Code = 404;
+                            }
                         }
                     }
                 }
@@ -110,6 +125,10 @@ class Core
                                 }
                             }
                         }
+                    }
+                    else
+                    {
+                        $this->Response->Function = 'index';
                     }
                 }
             }
@@ -145,6 +164,10 @@ class Core
         }
         if($this->Response->Code == 200)
         {
+            if(empty(trim($this->Response->Function)))
+            {
+                $this->Response->Function = 'index';
+            }
             require_once($this->Response->File);
             if(class_exists($this->Response->Class))
             {
