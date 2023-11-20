@@ -72,6 +72,27 @@ $config['socket'] = null;
 $config['charset'] = 'utf8';
 ```
 
+### APP DIRECTRORY STRUCTURE
+
+APP
+.
+|-- ..
+|-- Configs                         # Configs Directory 
+    |-- App.php
+    |-- Database.php
+|-- Controllers                     # Global controllers
+|-- Libraries                       # Global libraries
+|-- Models                          # Global models
+|-- Modules                         # Global modules
+    |-- Land
+        |-- Controllers             # Module Controller
+            |-- Land.php
+        |-- Views                   # Module Views
+            |-- land.php
+            |-- layout.php
+|-- Views                           # Global views
+|-- ..
+
 ### Cache Dir ###
 
 Set Permission to 777 for Cache Directory;
