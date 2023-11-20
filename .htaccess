@@ -2,6 +2,12 @@
 Options All -Indexes
 RewriteEngine On
 
+# Change as needed
+#ErrorDocument 401 /tefa/errors/401.php
+#ErrorDocument 403 /tefa/errors/403.php
+#ErrorDocument 404 /tefa/errors/404.php
+#ErrorDocument 500 /tefa/errors/500.php
+
 # Uncomment the following line if your public folder isn't the web server's root
 RewriteBase /core/
 RewriteRule (^|/)App(/|$) - [F]
