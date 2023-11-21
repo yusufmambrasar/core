@@ -72,11 +72,10 @@ $config['socket'] = null;
 $config['charset'] = 'utf8';
 ```
 
-### APP DIRECTRORY STRUCTURE
+### APP DIRECTORY STRUCTURE
 
+```
 APP
-.
-|-- ..
 |-- Configs                         # Configs Directory 
     |-- App.php
     |-- Database.php
@@ -91,7 +90,7 @@ APP
             |-- land.php
             |-- layout.php
 |-- Views                           # Global views
-|-- ..
+```
 
 ### Cache Dir ###
 
