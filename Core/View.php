@@ -15,9 +15,27 @@ class View
         }
     }
 
+    public function set( $name , $value )
+    {
+        $this->_data[ $name ] = $value;
+		return $this;
+    }
+
+    public function unset( $name )
+    {
+        unset( $this->_data[ $name ] );
+		return $this;
+    }
+
     public function assign( $name , $value )
     {
         $this->{ $name } = $value;
+		return $this;
+    }
+
+    public function unassign( $name  )
+    {
+        unset( $this->{ $name } );
 		return $this;
     }
 
@@ -28,10 +46,21 @@ class View
         return $this;
     }
 
+    public function unpart ( $name )
+    {
+        $this->unassign( $name );
+        return $this;
+    }
+
     public function render( $view )
     {
         $this->part( 'content' , $view );
-        echo $this->_load( $this->_layout );
+        if(defined('SANITIZE')){
+            ob_start("sanitize_output");
+            echo $this->sanitize_output($this->_load( $this->_layout ));
+        }else{
+            echo $this->_load( $this->_layout );
+        }
     }
 
     private function _load( $view )
@@ -41,10 +70,43 @@ class View
         if( file_exists( $file ) )
         {
             ob_start();
+            if(is_array($this->_data))
+            {
+                foreach($this->_data as $k => $v)
+                {
+                    $$k = $v;
+                }
+            }
             include ( $file );
             $buffer = ob_get_contents();
             ob_end_clean();
         }
+        return $buffer;
+    }
+
+    public function json($data)
+    {
+        $jsondata = json_encode($data);
+        header('Content-Type: application/json');
+        echo $jsondata;
+    }
+
+    function sanitize_output($buffer) 
+    {
+        $search = array(
+            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+            '/(\s)+/s',         // shorten multiple whitespace sequences
+            '/<!--(.|\s)*?-->/' // Remove HTML comments
+        );
+        $replace = array(
+            '>',
+            '<',
+            '\\1',
+            ''
+        );
+    
+        $buffer = preg_replace($search, $replace, $buffer);
         return $buffer;
     }
 
