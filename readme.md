@@ -75,7 +75,7 @@ $config['charset'] = 'utf8';
 ### APP DIRECTORY STRUCTURE
 
 ```
-APP
+App
 |-- Configs                         # Configs Directory 
     |-- App.php
     |-- Database.php
