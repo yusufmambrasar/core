@@ -3,42 +3,38 @@ defined('BASE') or header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
 
 class Controller 
 {   
-    public array $data = [];
-    public array $config = [];
-    public object $view;
     private array $_loaded = [];
+    public array $config;
 
     public function __construct()
     {
-        $this->Load('Core/Database');
-        $this->Load('Core/Session');
         $file = BASE . '/App/Configs/App.php';
         if(file_exists($file))
         {
-            $config = [];
             include($file);
-            foreach($config as $k => $v)
-            {
-                $this->config[$k] = $v;
-                $this->data['config'][$k] = $v;
-            } 
+            if (is_array($config)) {
+                $this->config = $config;
+            }
         }
-        $this->view = new View();
     }
 
     public function Load($path='')
     {
         if(!empty($path))
         {
-            $path = BASE . '/' . $path . '.php';
             $pathinfo = pathinfo($path);
-            if($pathinfo['extension']!=='php')
+            if(!isset($pathinfo['extension']))
             {
                 $path = $path . '.php';
             }
-            if(!isset($this->_loaded[$pathinfo['filename']]))
+            if(!file_exists($path))
             {
-                if(file_exists($path))
+                $path = BASE . '/' . $path;
+            }
+            if(file_exists($path))
+            {
+                $pathinfo = pathinfo($path);
+                if(!isset($this->_loaded[$pathinfo['filename']]))
                 {
                     include($path);
                     if(class_exists($pathinfo['filename']))

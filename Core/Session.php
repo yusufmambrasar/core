@@ -5,12 +5,10 @@ class Session
 {
     public string $name = 'MYSESSION';
     
-    public function __construct($name='')
+    public function __construct( $name='' )
     {
         if(session_status() === PHP_SESSION_NONE) 
         {
-            ini_set('session.save_path',BASE.'/Temp');
-            ini_set('session.gc_probability', 1);
             session_start();
         }
         if(!empty($name))
@@ -20,12 +18,27 @@ class Session
         return $this;
     }
     
-    public function Set($name,$value)
+    public function set( $name , $value )
     {
         $_SESSION[$this->name][$name] = $value;
     }
 
-    public function Get($name)
+    public function unset( $name )
+    {
+        unset($_SESSION[$this->name][$name]);
+        return $this;
+    }
+
+    public function isSet( $name )
+    {
+        if(isset($_SESSION[$this->name][$name]))
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    public function get( $name )
     {
         if(isset($_SESSION[$this->name][$name]))
         {
@@ -37,28 +50,13 @@ class Session
         }
     }
 
-    public function isSet($name)
+    public function clear( )
     {
-        if(isset($_SESSION[$this->name][$name]))
-        {
-            return TRUE;
-        }
-        return FALSE;
-    }
-
-    public function Del($name)
-    {
-        unset($_SESSION[$this->name][$name]);
+        $_SESSION[ $this->name ] = array();
         return $this;
     }
 
-    public function Clear($name)
-    {
-        $_SESSION[$name] = array();
-        return $this;
-    }
-
-    public function Destroy()
+    public function destroy()
     {
         $_SESSION = array();
         session_destroy();

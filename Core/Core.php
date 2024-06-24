@@ -13,8 +13,17 @@ class Core
     public Request $Request;
     public Response $Response;
     public object $Instance;
-    public function __construct()
+    public string $modules_path;
+    public function __construct( $modules_path = '' )
     {
+        if(!empty($modules_path))
+        {
+            $this->modules_path = $modules_path;
+        }
+        else
+        {
+            $this->modules_path = BASE.'/App/Modules/';
+        }
         $this->Request = new Request();
         $this->Response = new Response();
         if(!empty($this->Request->Query))
@@ -31,7 +40,7 @@ class Core
                 $file = '';
                 if(isset($queries[1]))
                 {
-                    $file = BASE.'/App/Modules/'.ucfirst($queries[0]).
+                    $file = $this->modules_path.ucfirst($queries[0]).
                             '/Controllers/'.ucfirst($queries[1]).'.php';
                     if(file_exists($file))
                     {
@@ -65,7 +74,7 @@ class Core
                 {
                     if($this->Response->Code==404)
                     {
-                        $file = BASE.'/App/Modules/'.ucfirst($queries[0]).
+                        $file = $this->modules_path.ucfirst($queries[0]).
                                 '/Controllers/'.ucfirst($queries[0]).'.php';
                         if(file_exists($file))
                         {
@@ -78,7 +87,7 @@ class Core
                         }
                         else
                         {   
-                            $file = BASE.'/App/Modules/'.ucfirst($queries[0]).
+                            $file = $this->modules_path.ucfirst($queries[0]).
                             '/Controllers/Home.php';  
                             if(file_exists($file))
                             {
@@ -134,7 +143,7 @@ class Core
             }
             else
             {
-                $file = BASE.'/App/Modules/'.ucfirst($this->Request->Query).
+                $file = $this->modules_path.ucfirst($this->Request->Query).
                 '/Controllers/'.ucfirst($this->Request->Query).'.php';
                 if(file_exists($file))
                 {
@@ -151,7 +160,7 @@ class Core
         }
         else
         {
-            $file = BASE.'/App/Modules/'.ucfirst($this->Response->Module).
+            $file = $this->modules_path.ucfirst($this->Response->Module).
                     '/Controllers/'.ucfirst($this->Response->Class).'.php';
             if(file_exists($file))
             {
@@ -194,8 +203,15 @@ class Core
         }
         if($this->Response->Code==404)
         {
-            header("HTTP/1.0 404 Not Found");
-            die();
+            if(defined('DEBUG'))
+            {
+                print_r($this);
+            }
+            else
+            {
+                header("HTTP/1.0 404 Not Found");
+                die();
+            }
         }
     }
 

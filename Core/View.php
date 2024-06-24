@@ -91,6 +91,37 @@ class View
         echo $jsondata;
     }
 
+    public function excel($name,$data)
+    {
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=".$name.".xls");
+        echo '<table border="1"';
+        echo '<tr>';
+        $i=0;
+        foreach($data as $k=>$dt)
+        {
+            $i++;
+            if($i==1)
+            {
+                foreach($dt as $j => $x)
+                {
+                    echo '<th>'.$j.'</th>';
+                }
+            }
+        }
+        echo '</tr>';
+        foreach($data as $k=>$dt)
+        {
+            echo '<tr>';
+            foreach($dt as $j => $x)
+            {
+                echo '<td>'.$x.'</td>';
+            }
+            echo '</tr>';
+        }
+        echo '</table>';
+    }
+
     function sanitize_output($buffer) 
     {
         $search = array(
